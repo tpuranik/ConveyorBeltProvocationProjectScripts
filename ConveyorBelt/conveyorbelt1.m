@@ -55,10 +55,9 @@ ylabel('Amplitude')
 %%high variability in code 
 
 prompt = {'Enter start time'}
-dlgtitle = 'start time';
-answer = inputdlg(prompt,dlgtitle)
+answer = input(prompt)
 
-start=answer{1}; %Usually 0, but if there is a long period of no recording before start before first peak
+start=answer; %Usually 0, but if there is a long period of no recording before start before first peak
 sl1=(max(data4)-min(data4))/2; % for data4
 n1=(max(data4)-min(data4))/5; % for data4
 sl2=(max(data5)-min(data5))/2; % for data5
