@@ -46,85 +46,71 @@ for k, v in f.items():
 '''
 
 channel=(electrode-1)*9+7
+
+#Defining Values from Matlab
 fitobject=arrays['fitobject']
 fitobject2=arrays['fitobject2']
-length180=len(fitobject[0])
 r1=arrays['gamma_T']
-rating1try=r1
+r2=arrays['gamma_T2']
+r1x=arrays['X_T']
+r2x=arrays['X_T2']
+
+length180=len(fitobject[0])
+
 rating1ex=r1[:][0]
 rating1ex = rating1ex[~np.isnan(rating1ex)]
-rating1try = rating1try[~np.isnan(rating1try)]#problem:loses shape
-print('rating1ex',rating1ex)
 l1=len(rating1ex)
-print('l1',l1)
 rating1=r1[0:length180,0:l1]
-print('rating1',rating1try)
-r1x=arrays['X_T']
 rating1x=r1x[0,0:l1]
-#len(r2[0])=50
 
-
-r2=arrays['gamma_T2']
 rating2ex=r2[:][0]
 rating2ex = rating2ex[~np.isnan(rating2ex)]
 l2=len(rating2ex)
 rating2=r2[0:length180,0:l2]
-#print('rating1',len(rating1),len(rating1[0]),l2)
-r2x=arrays['X_T2']
 rating2x=r2x[0,0:l2]
-total=[fitobject,fitobject2,rating1,rating2,rating1x,rating2x]
-#print(fitobject)
-#print(rating1)
 
+total=[fitobject,fitobject2,rating1,rating2,rating1x,rating2x]
+
+#Initialiazing arrays
 label1=np.zeros([l1,1])
 label2=np.zeros([l2,1])
 label=np.zeros([length180,1])
-#print(label2)
 
 #Defining X values depending on dataset for examination (r1, r1, or all)
 if rating1or2==1:
 	X = rating1[channel,:] #for individual values
-	#print('Xbefore',X)
 	X = X[~np.isnan(X)]
-	#print('Xafter',X)
 	r1x=arrays['X_T']
 	rating1x=r1x[channel,0:l1]
 	rating1x=rating1x[~np.isnan(rating1x)]
 	label1=rating1x
-	#print('label1',label1)
 if rating1or2==2:
 	X = rating2[channel,:] #for individual values
-	#print('Xbefore',X)
 	X = X[~np.isnan(X)]
-	#print('Xafter',X)
 	r2x=arrays['X_T2']
 	rating2x=r2x[channel,0:l2]
 	rating2x=rating2x[~np.isnan(rating2x)]
 	label1=rating2x
-	#print('label2',label1)
 if rating1or2==3: #total
 	X1= rating1[channel,:] #for individual values
 	X1 = X1[~np.isnan(X1)]
+	r2x=arrays['X_T2']
 	r1x=arrays['X_T']
 	rating1x=r1x[channel,0:l1]
 	rating1x=rating1x[~np.isnan(rating1x)]
 	X2 = rating2[channel,:] #for individual values
 	X2 = X2[~np.isnan(X2)]
-	r2x=arrays['X_T2']
 	rating2x=r2x[channel,0:l2]
 	rating2x=rating2x[~np.isnan(rating2x)]
 	label1=list(rating1x)+list(rating2x)
 	label1=np.array(label1)
 	X=list(X1)+list(X2)
 	X=np.array(X)
-print('X',X,len(X))
 
 #Defining class labels (y)
 b=max(label1)
 c=min(label1)
-#print('minandmax',b,c)
 a=b-2; #automatically defining high rating values as largest three values
-#for label1: its 0 
 for i in range(10):
 	if i<a:
 		label1=[0 if e == i else e for e in label1]
@@ -138,8 +124,7 @@ Y=np.asarray(y) #list to array for formatting reasons
 #Kfold Indices
 kf = KFold(n_splits=5, random_state=None,shuffle=True)
 kf.get_n_splits(X)
-#print('kf',kf)
-#print('Y',len(Y),'X',len(X))
+
 print('Y',Y)
 for train_index, test_index in kf.split(X):
 	X_train, X_test = X[train_index], X[test_index]
