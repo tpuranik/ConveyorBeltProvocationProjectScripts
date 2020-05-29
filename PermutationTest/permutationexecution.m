@@ -1,6 +1,8 @@
 %This code is executing the Permutations and saves the files. To run this
 %code, run matrixforpermutationtestfinal.m before
 
+%Uses perm function from perm.m
+
 n = 60; % trials
 d = 360; % different features
 

@@ -245,6 +245,27 @@ title('ratingall')
 colorbar
 set(gcf,'color','w')
 
+
+function [channel4]= calcp(slopeactual1,Slopes,coun)
+for ch=1:20
+for i=1:1:9
+    B=[]; Actual=[]; 
+Actual=slopeactual1(ch,i);%number for median of this
+if Actual>0
+    M=Slopes(:,coun);
+    B=find(M>Actual);
+    channel4(ch,i)=size(B,1)/(size(M,1)+1);
+else
+    M=Slopes(:,coun);
+    B=find(M<Actual);
+    channel4(ch,i)=size(B,1)/(size(M,1)+1);
+end
+check(coun)=size(B,1);
+coun=coun+1;
+end
+end
+end
+
 function [h, crit_p, adj_ci_cvrg, adj_p]=fdr_bh(pvals,q,method,report)
 %https://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/27418/versions/9/previews/fdr_bh.m/index.html
 if nargin<1,
@@ -328,26 +349,6 @@ if strcmpi(report,'yes'),
     else
         fprintf('FDR/FCR procedure used is guaranteed valid for independent or dependent tests.\n');
     end
-end
-end
-
-function [channel4]= calcp(slopeactual1,Slopes,coun)
-for ch=1:20
-for i=1:1:9
-    B=[]; Actual=[]; 
-Actual=slopeactual1(ch,i);%number for median of this
-if Actual>0
-    M=Slopes(:,coun);
-    B=find(M>Actual);
-    channel4(ch,i)=size(B,1)/(size(M,1)+1);
-else
-    M=Slopes(:,coun);
-    B=find(M<Actual);
-    channel4(ch,i)=size(B,1)/(size(M,1)+1);
-end
-check(coun)=size(B,1);
-coun=coun+1;
-end
 end
 end
 
