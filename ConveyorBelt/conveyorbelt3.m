@@ -10,9 +10,6 @@
 %Condition: If the patient pushes the dial multiple times to lock in answer
 dialpushedstart= del(dialpushedstart,1,78,0.5);
 %Condition: post filtering peaks, this removes any pushes the patient does to practice
-%before the trial starts
-[dialpushedstart]=removingstart(dialpushedstart);
-
 
 %Initializing empty arrays
 peak4rating=zeros(15,78);
@@ -420,31 +417,19 @@ for i=1:1:size(peak4pos,2)
         a=1;
         RatingFinal(a,1+d)=peak4pos(i);
         i=i+1;
-        end
-        %is in between
-%         if(peak4pos(i)<dialpushedstart(j)) && peak4pos(i)>dialpushedstart(j-1) && 
-%             RatingFinal(a,d)=peak4pos(i);
-%             a=a+1;
-%         end
-    
-end
-    
-
-   if j==1
+        end  
+    end
+    if j==1
     if peak4pos(i)>dialpushedstart(j) 
-        
         d=d+1;
         j=j+1;
         a=1;
         RatingFinal(a,1+d)=peak4pos(i);
-        
-        
     end
     if(peak4pos(i)<dialpushedstart(j)) 
         RatingFinal(a,d)=peak4pos(i);
         a=a+1;
         i=i+1;
-    
     end
     end
     end
@@ -453,16 +438,13 @@ end
         d=d+1;
         j=j+1;
         a=1;
-        RatingFinal(a,1+d)=peak4pos(i);
-       
-        
+        RatingFinal(a,1+d)=peak4pos(i);  
    end
      if j<=size(dialpushedstart,2)
      if(peak4pos(i)<dialpushedstart(j)) 
         RatingFinal(a,d)=peak4pos(i);
         a=a+1;
         i=i+1;
-    
     end
     end
     end
@@ -481,36 +463,22 @@ indices=[];
 for(i=1:1:size(All4,2)) %column
 for(a=1:1:size(All4,1)) %row
     testdelete=All4(:,i);
-   
     if testdelete(a,1)==x
         indices(o)=a;
         o=o+1;
     end
 end
-
-
-
 testdelete(indices)=[];
 w=size(testdelete,1);
 u=size(indices);
 for(i=1:1:u)
-testdelete(w+i,1)=0;
-indices=[];
+    testdelete(w+i,1)=0;
+    indices=[];
 end
 o=1;
 All5(1:size(testdelete,1),q)=testdelete;
 q=q+1;
 testdelete=[];
-end
-end
-
-%removing values below start threshold
-function [dialpushedstart]=removingstart(dialpushedstart)
-if(size(dialpushedstart,2)-78)>0
-    x=size(dialpushedstart,2);
-    s=dialpushedstart(x-77);
-    indices2 = find(abs(dialpushedstart)<s);
-    dialpushedstart(indices2) = [];
 end
 end
 

@@ -21,9 +21,10 @@ dialpushedstart=lockedin(data6,peak4pos1,o,n,sl); %find all possible points of p
 [filtering4,test4]=additionalfiltering(peak4pos1,data4,n2);
 
 
-%functions for creating and cleaning dialpushedstart, which is when the participant
-%locks in distress rating
+%functions for cleaning dialpushedstart, which is when the participant
+%locks in answer
 function dialpushedstart5=lockedin(data6, peak4pos1,start,n,sl)
+%--------------DIAL PUSHED START---------------------
 %data6-when the data was locked in
 sizedata6=size(data6,1)-100;
 j=1;o=1;y=0;z=1;h=1;g=1;firstnum=true;endnum=true;l=1;
@@ -31,7 +32,7 @@ for (i=1:1:sizedata6)
     if firstnum==false && (data6(i+2)-data6(i))>=sl && data6(i)<n
     z=[];y=[];
     z=data6(i-40:i-3);
-    y=size(find(z<n));
+    y=find(z<n);
     end
     %Finding whether there is a slope and consistent increase in amplitude
     if y>35 
@@ -41,7 +42,7 @@ for (i=1:1:sizedata6)
     if firstnum==true
      z=[];lp=[];
         z=data6(i+2:i+12);
-        lp=size(find(z<n));
+        lp=find(z<n);
     end
 
     if j>1
@@ -70,7 +71,7 @@ indices1 = find(abs(dialpushedstart5)<start);
 dialpushedstart5(indices1) = [];
 end
 
-%this removes any peaks that are too close together in dialpushed
+%this removes any peaks that are too close together 
 function [dialpushedstart]= dialcleaning(dialpushedstart)
 o=1;
 tonote=0;
@@ -79,7 +80,7 @@ indices=[];
 i=1;
 
 while i<(size(dialpushedstart,2)-1)
-if abs(dialpushedstart(1,i+1)-dialpushedstart(1,i))<10000 %1/3 of a second with this fs
+if abs(dialpushedstart(1,i+1)-dialpushedstart(1,i))<10000
     indices(o)=i+1;
     o=o+1;
 end
@@ -90,21 +91,24 @@ dialpushedstart(indices)=[];
 end
 
 %in case they are pushing the dial too frequently or repeatedly 
+indices2=[];
 for i=1:1:((size(dialpushedstart,2)-1))
-    if (dialpushedstart(1,i+1)-dialpushedstart(1,i))<100000 %
+    if (dialpushedstart(1,i+1)-dialpushedstart(1,i))<100000 %less than 20 seconds
         dialpushedstart(1,i+1)=0.5;
     end
 end
 
 end
 
-%removes peaks below start value because many participants hit start button
-% many times before they get used to the task
+%removes peaks below start value
 function [dialpushedstart,peak4pos1,peak5pos1]=startremoved(dialpushedstart,peak4pos1,peak5pos1)
-o=1;zz=0;d=0;di=0;indices=[];first=false;
+o=1;zz=0;
+d=0;
+di=0;
+indices=[];
+first=false;
 
-%finding dialpushed peaks that are before one minute before the second
-%pushed peak
+%finding dialpushed peaks that are too close together, or 
 for i=2:1:(size(dialpushedstart,2)-1)
     if (dialpushedstart(1,i+1)-dialpushedstart(1,i))>2000000 && first==false
        zz=i;
@@ -117,8 +121,7 @@ for i=2:1:(size(dialpushedstart,2)-1)
     indices = find(abs(dialpushedstart)<di);
     dialpushedstart(indices) = [];
     end
-
-%removing these values from peak4 and peak5 finders
+    
 multiplier=1/30000;
 tm=10/multiplier;
 start=di-tm;
@@ -132,18 +135,24 @@ end
 
 %this looks at 80 values after the peak, and is saying that if at least 30
 %of them are below the threshold value, then its not a peak, but a glitch
+%another way to remove a glitch
 function [peak5pos1]=gettingridofglitches(peak5pos1,data5,n)
 %n=1;
 zz=0;
 xx=1;
 i=1;
 while i< size(peak5pos1,2)
-    xx=peak5pos1(1,i); 
-    A=[];zz=[];
-    A=data5(xx:xx+80);
-    zz=size(find(A<n));
+    
+    xx=peak5pos1(1,i); %peak5pos1(1,i)
+    for(j=xx:1:xx+80) %previously 80 and 30
+        if data5(j,1)<n
+        zz=zz+1;
+        end
+    end
+    
     if zz>30 
         peak5pos1(1,i)=1;
+        
     end
     zz=0;
     i=i+1;
@@ -171,6 +180,7 @@ for(i=1:1:size(peak5pos1,2)-1)
     if data5(x+j)>n
         w=w+1;
     end
+    
     end
     test(i)=w;
     if w<105 
@@ -184,6 +194,8 @@ for(i=1:1:size(peak5pos1,2)-1)
         h=h+1;
     end
 end
+
+
 peak5pos1(indices)=[];
 end
 

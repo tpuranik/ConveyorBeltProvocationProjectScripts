@@ -10,6 +10,73 @@ sl=(max(data1)-min(data1))/2;
 [indexplace,peakindex,movingend,peakcount]=peakfinder(sl,data1,sizedata)
 sl=(max(data2)-min(data2))/2
 [indexplace2,peakindex2,movingend2,peakcount2]=peakfinder(sl,data2,sizedata)
+%------------------DATA2:Conveyor Belt, Finding Peaks----------------------
+peak2=0;peakstartindex2=0;c=1;b=1;index2=[];endpeak2=[];peakindex2=[];peakstart=true;
+peakcount2=0;z=1;cd=1;p=1;firstnum=true;sizedata=size(data2,1)-100;yy=1;
+mark2=0;in2=0;df=1;
+for (a=1:1:sizedata)
+    %first if the
+    if (data2(7+a)-data2(a))>0.5
+        peak=true;%yes there is a peak
+        set=true;%yes this set has started
+        upslope=false;%the slope of the individual peak is positive
+        
+    end
+   
+    if peak==true && set==true  %if this peak is there, start counting sin waves
+        if data2(a)> 4 && upslope==false  %counting everytime there is a peak, immediately turns it off after peak recorded
+            peak2=peak2+1;
+            binarydata2(a)=1;
+            upslope=true;%going down the peak
+            if peakstart==true %if the peak is started, record just the first value
+                peakindex2(z)= a;
+                z=z+1;
+                peakstart=false;
+                
+            end
+        end
+        
+        %checking if the set is over, if all of the numbers for a long time
+        %are 0 records that
+        if abs(data2(a+3)-data2(a+20))<0.5  && upslope==false && set==true && peak2>5
+            for (x=a+3:1:a+90)
+                if abs(data2(x)-data2(x+1))<0.5
+                    index2(c)=1;
+                    if firstnum==true
+                        endpeak2(cd)=x;
+                        cd=cd+1;
+                        firstnum=false;
+                    end
+                    c=c+1;
+                else
+                    c=1;
+                    index2=[];
+                end
+                %
+            end
+            if sum(index2)> 80
+                peakcount2(b)=peak2;
+                set=false;
+                peakstart=true;
+                firstnum=true;
+                movingend(b)=a;
+                b=b+1;
+                peak2=0;
+                
+                
+                index2=[];
+                % %             b is the number of the peak
+            end
+            %
+        end
+        if abs(data2(a)-data2(a+10))<0.5 && upslope==false %upslope only true when it has now dropped below 0 (sin value has been completed)
+            peak=false;
+            binarydata2(a)=0;
+        end
+        
+    end
+    
+end
 
 %Calculating Direction
 %Calculating position and direction of movement of conveyor belt.
@@ -17,11 +84,16 @@ sl=(max(data2)-min(data2))/2
 %can be used if data1 and data2 optical fibers are broken. 
 %direction1=[0,1,0,0,1,0,0,1,0,0,1,0,1,0,1,0,0,1,0,0,1,0,0,1,0,1,0,1,0,0,1,0,0,1,0,0,1,0,1];
 
+
 %If the positioning is changed in the future, use methods below. 
+
 %This confirms that the number of peaks going forward and back was the same
 eachwave=distance/peakcount(1);
 sizepeakcount=size(peakcount);
 numberofconveyortrials=size(peakindex,2)/objects;%each trial has 13 movements
+% for(x=1:1:size(peakcount,2))
+%     totaldistance(x)=round(eachwave*peakcount(x),2);
+% end
 endoftrial=[numberofconveyortrials:numberofconveyortrials:size(peakindex,2)];
 for (i=1:1:size(peakindex,2))
 if data2(peakindex(i)+10)<data1(peakindex(i)+10)
@@ -136,8 +208,10 @@ conveyor_behavior(sc/objects+sc/objects+1,7)=NaN;
 conveyor_behavior(sc/objects+sc/objects+1,9)=NaN;
 conveyor_behavior(1,8)=dialpushedstart(1,1)*multiplier-rstart;
 conveyor_behavior_headers={'Position Number', 'Position','Rating1','Rating2', 'Rating Time 1 (seconds)', 'Rating Time 2 (seconds)', 'Rating Time 1 Start (Seconds)', 'Rating time 1 End (Seconds)', 'Rating Time 2 Start (Seconds)', 'Rating Time 2 End (Seconds)'};
+% %con=conveyor_behavior;
+% result=  conveyor_behavior(:,3:4)==con(:,3:4)
 
-save('Saving Information')
+%save(strcat(subject,'_conveyor-provocation_',day,'ephys_behavior_AV.mat'),'conveyor_behavior_headers','conveyor_behavior','dialpushedstart','ratingstart','movingend1','-v7.3')
 
 %just filtering dialpushed and removing anything form start
 function [dialpushedstart1]=doubledialpushed(dialpushedstart)
@@ -183,12 +257,13 @@ for (a=1:1:sizedata)
         end
         
         %peak is ending
-        if abs(data1(a+3)-data1(a+30))<sl  && upslope==false && set==true && abs(data1(a+7)-data1(a))<sl && peak1>2000
+        if abs(data1(a+3)-data1(a+30))<0.5  && upslope==false && set==true && abs(data1(a+7)-data1(a))<0.5 && peak1>2000
             for (x=a+3:1:a+73)
-                if abs(data1(x)-data1(x+1))<sl
+                if abs(data1(x)-data1(x+1))<0.5
                     index(c)=1;
                     if firstnum==true 
                         indexplace(cd)=x;
+%                         negdone=true;
                         cd=cd+1;
                         firstnum=false;
                         
@@ -208,10 +283,11 @@ for (a=1:1:sizedata)
                 peakstart=true;
                 b=b+1;
                 peak1=0;
+                %b is the number of the peak
             end
             
         end
-        if abs(data1(a)-data1(a+10))<sl && upslope==false %upslope only true when it has now dropped below 0 (sin value has been completed)
+        if abs(data1(a)-data1(a+10))<0.5 && upslope==false %upslope only true when it has now dropped below 0 (sin value has been completed)
             peak=false;
             binarydata1(a)=0;
         end    

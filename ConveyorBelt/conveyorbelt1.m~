@@ -79,32 +79,28 @@ peak5pos1(indices2)=[];
 %this function is broadly looking to count peaks, some filtering is done
 %so that any glitches, defined as short peaks are removed
 %this is saying that a peak is defined by at least 40 values of positive
-%recording after
+%recording afters
 %Note: numerical values were chosen after optimization of datasets for the
 %minimum number of values that defined some "peak" in signal without being
 %quick glitches
 function[peak4pos,peak4counter,countingtest]=dialpeakfinder(data4,n,sl)
 
-%initial variables
+%Initial variables
 peakstart=true;
 peakset=false;
 upslope=true;
 peak4=0;
 peak4pos=0;
 peak=true;
-cd=1;
 firstnum=true;
 c=1;
-peak4neg=0;
 peakcount4=0;
-index4=0;
-lp=0;
 z=1;
 o=1;
 set4peak=0;
 peak4counter=0;
 noglitch=false;
-xo=0;
+
 
 %1. Checking initial increase in slope at multiple points, establishing
 %start 
@@ -112,18 +108,17 @@ for (a=4:1:size(data4,1)-100)
     if abs(data4(a)-data4(a+2))>sl &&(data4(a+3)-data4(a))>sl && data4(a+1)>n 
         peak=true;%yes there is a peak
         peakset=true;%yes this set has started
-        upslope=true;%the slope of the individual peak is positive
-        
+        upslope=true;%the slope of the individual peak is positive    
     end
     
-    if peak==true && peakset==true  %if this peak is there, start counting sin waves
+    if peak==true && peakset==true  %if this peak is there, start counting peaks
         if data4(a)>0 && upslope==true  %counting everytime there is a peak, immediately turns it off after peak recorded
             peak4=peak4+1;
             upslope=false;%going down the peak
             %to catch any errors/glitches in the data
             A=[]; lp=[];
-            A=data4(a+5):data4(a+40)
-            lp=find(A>n)
+            A=data4(a+5):data4(a+40);
+            lp=size(find(A>n));
        if lp>=32
             noglitch=true;
        else
@@ -152,8 +147,7 @@ for (a=4:1:size(data4,1)-100)
                     c=c+1;
                 else 
                     c=1;
-                end
-%                 
+                end                 
             end
             countingtest(o,1)=c; %for troubleshooting
             countingtest(o,2)=x;
@@ -166,18 +160,13 @@ for (a=4:1:size(data4,1)-100)
                 firstnum=true;
                 b=b+1;
                 peak4=0;
-                index4=[];
+                c=1;
             end
             
         end
-        if data4(a)<0 && upslope==false %upslope only true when it has now dropped below 0 (sin value has been completed)
-            peak=false;
-            lp=0;
-            
-        end
-        if peakset==false 
-         set4peak=size(peak4counter,2);
-         
+        if data4(a)<n && upslope==false %upslope only true when it has now dropped below 0 (sin value has been completed)
+            peak=false; %peak is over
+            set4peak=size(peak4counter,2); %recording size of peaks (length of signal)
         end
         
     end

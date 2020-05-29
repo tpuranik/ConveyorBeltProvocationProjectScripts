@@ -117,8 +117,8 @@ for (a=4:1:size(data4,1)-100)
             upslope=false;%going down the peak
             %to catch any errors/glitches in the data
             A=[]; lp=[];
-            A=data4(a+5):data4(a+40)
-            lp=find(A>n)
+            A=data4(a+5):data4(a+40);
+            lp=size(find(A>n));
        if lp>=32
             noglitch=true;
        else
