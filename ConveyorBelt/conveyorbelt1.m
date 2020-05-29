@@ -59,7 +59,7 @@ answer = input(prompt)
 
 start=answer; %Usually 0, but if there is a long period of no recording before start before first peak
 sl1=(max(data4)-min(data4))/2; % for data4
-n1=(max(data4)-min(data4))/5; % for data4
+n1=(max(data4)-min(data4))/5; % for data4 
 sl2=(max(data5)-min(data5))/2; % for data5
 n2=(max(data5)-min(data5))/5; % for data5
 sl=(max(data6)-min(data6))/2; % for data6

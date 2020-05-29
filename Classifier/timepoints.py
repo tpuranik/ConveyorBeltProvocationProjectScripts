@@ -12,7 +12,6 @@ from numpy import savetxt
 from numpy import save
 
 
-#processing large EEG data and defining events
 #Input variables
 subject=''
 #import files
@@ -24,7 +23,7 @@ file1='file for ft_data'
 time=loadmat('downsampled time values from data')
 
 #Approach 1: Formatting EEG and creating timepoints with labels
-#advantages: in data structure more accessible and modifiable for classifier work
+#advantages: in data structure that is more accessible and modifiable for classifier work
 
 conveyorstart=time['conveyorstart']
 dialpushedstart=time['dialpushedstart']
@@ -94,7 +93,7 @@ save(savename,s)
 channel_names = ['AFz','C3','C4','CPz','Cz','F3','F4','F7','F8','FC1','FC2','FC5','FC6','Fp1','Fp2','FT9','FT10','Fz','T7','T8']
 montage = 'standard_1020'
 n_channels = 20
-channel_types=['eeg','eeg','eeg','eeg','eeg','eeg','eeg','eeg','eeg','eeg','eeg','eeg','eeg','eeg','eeg','eeg','eeg','eeg','eeg','eeg']
+channel_types=['eeg']*n_channels
 sampling_rate = 1000
 info = mne.create_info(channel_names, sampling_rate, channel_types, montage)
 raw =mne.io.read_raw_fieldtrip(file1, info, data_name='ft_data')
