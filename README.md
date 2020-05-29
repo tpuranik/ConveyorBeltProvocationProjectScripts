@@ -7,7 +7,7 @@ Task Information:
 During this task designed by Nicole Provenza in the Borton Lab, a distress-inducing object sits on a conveyor belt that comes closer and farther away from the participant with OCD. The participant rates their distress level at multiple points of the task. The participants were setup with the following EEG electrodes: 'AFZ','C3','C4','CPZ','CZ','F3','F4','F7','F8','FC1','FC2','FC5','FC6','FP1','FP2','FT9','FT10','FZ','T7','T8'
 The electrodes are tripolar surface electrodes and data was acquired using the OpenEphys system.
 
-1. Conveyor Belt Rotary Encoder:
+1. Conveyor Belt:
 Information for the conveyor belt position, the distress ratings by the participants, and the timings were captured by two rotary encoders.
 
 Order to Execute code:
