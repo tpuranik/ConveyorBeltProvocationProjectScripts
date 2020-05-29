@@ -5,11 +5,17 @@ clear all;
 %%does the initial peak count for data 4 and data 5, which have the dial
 %%rotary encoder information. 
 
+%This first part of the code manually detects peaks that are defined based
+%on the data. Matlab functions such as peak finder did not work and the
+%code had a number of variations and glitches that are filtered out in
+%conveyorbelt2 and conveyorbelt3. The rotary encoders used in this project
+%are www.adafruit.com/product/377.
+
 %To use code: 
 %1.input pathway to 6 rotary encoder data channels and change
 %subject name, sample rate, day and trial information, and distance that the conveyor_belt moves
 %everytime.
-%2. 
+%2. establish start time and note this value if not 1
 
 %Ouput of four codes: conveyor_behavior and conveyor_behavior_headers
 

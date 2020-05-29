@@ -2,8 +2,8 @@
 %%Analysis for a single patient's ratings and timings during the Conveyor
 %%Belt Provocation Task and visualization of data.
 
-%To use the script, two things need to be changed. 
-%1. Change Subject Name
+%To use the script, change the following:
+%1. Change Subject Name and paths
 %2. Uncomment the Saveas command if you want to save the figures as photos
 %automatically
 
