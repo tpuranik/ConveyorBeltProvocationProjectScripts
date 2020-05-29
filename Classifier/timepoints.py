@@ -61,11 +61,11 @@ def event_times(cutoff,ratingstart,dialpushedstart):
 	eventtimes=[0]*4*39
 	c=2 #counter for conveyor start
 	o=4 #counter for
-	eventtimes[0]=0 #start of task
+	eventtimes[0]=0 #start of task values before first conveyor movement
 	eventtimes[1]=5
 	eventtimes[2]=10
 	eventtimes[3]=20
-	for i in range(38): #to account for initial rating period before
+	for i in range(38):
 		eventtimes[o]=int(ratingstart[c,0]/fs-7-cutoff)
 		eventtimes[o+1]=int(ratingstart[c,0]/fs-cutoff)
 		eventtimes[o+2]=int(dialpushedstart[0,c]/fs-cutoff)
